@@ -1,6 +1,7 @@
 This package runs a gnuplot instance and allows to send commands over a stream.
 The following example displays an animation of a Gaussian bell curve getting wider:
 
+
 ```common-lisp
 (dotimes (j 12)
   (let* ((n 27)
@@ -9,3 +10,5 @@ The following example displays an animation of a Gaussian bell curve getting wid
     (plot l)
     (sleep .1)))
 ```
+
+Look in `test.lisp` on how to load the package into SLIME.
