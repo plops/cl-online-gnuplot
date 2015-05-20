@@ -1,5 +1,6 @@
 ;; gnuplot communication from matlisp
 ;; realtime plotting: http://stackoverflow.com/questions/9162331/high-performance-realtime-data-display
+(in-package #:cl-online-gnuplot)
 (defparameter *current-gnuplot-process* nil)
 (defun open-gnuplot-stream (&key (gnuplot-binary
 				  (pathname "/usr/bin/gnuplot")))
@@ -36,9 +37,6 @@
   (gnuplot-send "set yrange [0:1];  set xrange [*:*]; plot '/dev/shm/o.dat' u 1:2 w lp~%"))
 
 #+nil
-(dotimes (j 12)
-  (let* ((n 27)
-	 (l (loop for i below n collect (exp (- (/ (expt (/ i n) 2)
-						   (* (+ j 2) .05d0)))))))
-    (plot l)
-    (sleep .1)))
+(ql:quickload :quickproject)
+#+nil
+(quickproject:make-project "/dev/shm/cl-online-gnuplot" :author "Martin Kielhorn" :license "GPLv3" :name "cl-online-gnuplot")
