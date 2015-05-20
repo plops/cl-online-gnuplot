@@ -34,7 +34,7 @@
 		     :if-does-not-exist :create)
     (loop for i below (length a) do
 	 (format s "~12,8f ~12,8f~%" i (elt a i))))
-  (gnuplot-send "set yrange [0:1];  set xrange [*:*]; plot '/dev/shm/o.dat' u 1:2 w lp~%"))
+  (gnuplot-send "set yrange [*:*];  set xrange [*:*]; plot '/dev/shm/o.dat' u 1:2 w lp~%"))
 
 #+nil
 (ql:quickload :quickproject)
