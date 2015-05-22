@@ -29,12 +29,21 @@
     (finish-output stream)))
 
 
-(defun plot (a)
+(defun plot (a &key (xrange nil) (yrange nil) (logy nil))
   (with-open-file (s "/dev/shm/o.dat" :direction :output :if-exists :supersede
 		     :if-does-not-exist :create)
-    (loop for i below (length a) do
-	 (format s "~12,8f ~12,8f~%" i (elt a i))))
-  (gnuplot-send "set yrange [*:*];  set xrange [*:*]; plot '/dev/shm/o.dat' u 1:2 w lp~%"))
+    (loop for (i j) in a do
+	 (format s "~12,8f ~12,8f~%" i j)))
+  (gnuplot-send (format nil "~{~a~%~} plot '/dev/shm/o.dat' u 1:2 w lp~%"
+			(list (if xrange
+				    (format nil "set xrange [~a:~a];" (first xrange) (second xrange))
+				    (format nil "set xrange [*:*];"))
+				(if yrange
+				    (format nil "set yrange [~a:~a];" (first yrange) (second yrange))
+				    (format nil "set yrange [*:*];"))
+				(if logy
+				    (format nil "set logscale y;")
+				    (format nil "unset logscale y;"))))))
 
 #+nil
 (ql:quickload :quickproject)
