@@ -34,7 +34,12 @@
 		     :if-does-not-exist :create)
     (loop for (i j) in a do
 	 (format s "~12,8f ~12,8f~%" i j)))
-  (gnuplot-send (format nil "~{~a~%~} plot '/dev/shm/o.dat' u 1:2 w lp~%"
+  (gnuplot-send (format nil "~{~a~%~} f(x) = A*exp(-(x-xc)**2/(2*(sigma**2)));
+ A=1; sigma=.5; xc=.1;
+ set fit logfile '/dev/shm/fit.log' quiet;
+ fit f(x) '/dev/shm/o.dat' u 1:2 via A,sigma,xc;
+ set grid;
+ plot '/dev/shm/o.dat' u 1:2 w lp, f(x)~%"
 			(list (if xrange
 				    (format nil "set xrange [~a:~a];" (first xrange) (second xrange))
 				    (format nil "set xrange [*:*];"))
