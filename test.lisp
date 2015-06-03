@@ -1,8 +1,5 @@
-(eval-when (:execute :load-toplevel :compile-toplevel)
-  (setf asdf:*central-registry*
-        '(*default-pathname-defaults*
-          #p "/home/martin/stage/cl-online-gnuplot/"))
-  (asdf:load-system "cl-online-gnuplot"))
+(ql:quickload :cl-online-gnuplot)
+(ql:quickload :fftw)
 
 (defpackage :gnuplot-test
   (:use :cl :cl-online-gnuplot))
@@ -17,12 +14,14 @@
 
 (loop for b from .1 upto 2.3 by .1 do
      (cl-online-gnuplot::gnuplot-send (format nil "
+set zrange [0:500]
  plot '-' matrix with image
 ~{~{~a ~}~%~}
 e
 e" (loop for i below 256 collect
 	(loop for j below 256 collect
-	     (- (sqrt (+ (expt (- i 128) 2) (expt (* b (- j 128)) 2)))))))))
+	     (floor (sqrt (+ (expt (- i 128) 2) (expt (* b (- j 128)) 2))))
+	     )))))
 
 (cl-online-gnuplot::gnuplot-send (format nil "
 splot '-' matrix with pm3d
