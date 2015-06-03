@@ -23,3 +23,12 @@ e" '((5 4 3 1 0)
      (2 2 0 0 1)
      (0 0 0 1 0)
      (0 1 2 4 3))))
+
+(cl-online-gnuplot::gnuplot-send (format nil "
+splot '-' matrix with pm3d
+~{~{~a ~}~%~}
+e
+e" '((5 4 3 1 0)
+     (2 2 0 0 1)
+     (0 0 0 1 0)
+     (0 1 2 4 3))))
