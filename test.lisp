@@ -15,20 +15,19 @@
     (plot l)
     (sleep .1)))
 
-(cl-online-gnuplot::gnuplot-send (format nil "
+(loop for b from .1 upto 2.3 by .1 do
+     (cl-online-gnuplot::gnuplot-send (format nil "
  plot '-' matrix with image
 ~{~{~a ~}~%~}
 e
-e" '((5 4 3 1 0)
-     (2 2 0 0 1)
-     (0 0 0 1 0)
-     (0 1 2 4 3))))
+e" (loop for i below 256 collect
+	(loop for j below 256 collect
+	     (- (sqrt (+ (expt (- i 128) 2) (expt (* b (- j 128)) 2)))))))))
 
 (cl-online-gnuplot::gnuplot-send (format nil "
 splot '-' matrix with pm3d
 ~{~{~a ~}~%~}
 e
-e" '((5 4 3 1 0)
-     (2 2 0 0 1)
-     (0 0 0 1 0)
-     (0 1 2 4 3))))
+e" (loop for i below 64 collect
+	(loop for j below 64 collect
+	     (- (sqrt (+ (expt (- i 32) 2) (expt (- j 32) 2))))))))
