@@ -10,7 +10,7 @@
 
 (dotimes (j 12)
   (let* ((n 27)
-	 (l (loop for i below n collect (exp (- (/ (expt (/ i n) 2)
-						   (* (+ j 2) .05d0)))))))
+	 (l (loop for i below n collect (list i (exp (- (/ (expt (/ i n) 2)
+						    (* (+ j 2) .05d0))))))))
     (plot l)
     (sleep .1)))
