@@ -14,3 +14,12 @@
 						    (* (+ j 2) .05d0))))))))
     (plot l)
     (sleep .1)))
+
+(cl-online-gnuplot::gnuplot-send (format nil "
+ plot '-' matrix with image
+~{~{~a ~}~%~}
+e
+e" '((5 4 3 1 0)
+     (2 2 0 0 1)
+     (0 0 0 1 0)
+     (0 1 2 4 3))))
