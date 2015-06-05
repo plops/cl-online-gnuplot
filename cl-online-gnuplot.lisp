@@ -30,6 +30,7 @@
 
 
 (defun plot (a &key (xrange nil) (yrange nil) (logy nil))
+  "plot a list of (x y) positions ((1 32.3) (2 93.3) .. )"
   (with-open-file (s "/dev/shm/o.dat" :direction :output :if-exists :supersede
 		     :if-does-not-exist :create)
     (loop for (i j) in a do
@@ -51,6 +52,7 @@
 				    (format nil "unset logscale y;"))))))
 
 (defun multi-plot (a &key (xrange nil) (yrange nil) (logy nil))
+    "plot multiple lines from a list of (x y0 y1 y2 y3 .. ) positions ((1 32.3 12.3 3.2) (2 93.3 12.4 3.2) .. )"
   (with-open-file (s "/dev/shm/o.dat" :direction :output :if-exists :supersede
 		     :if-does-not-exist :create)
     (loop for e in a do
