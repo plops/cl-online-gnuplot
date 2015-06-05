@@ -50,6 +50,32 @@
 				    (format nil "set logscale y;")
 				    (format nil "unset logscale y;"))))))
 
+(defun multi-plot (a &key (xrange nil) (yrange nil) (logy nil))
+  (with-open-file (s "/dev/shm/o.dat" :direction :output :if-exists :supersede
+		     :if-does-not-exist :create)
+    (loop for e in a do
+	 (format s "~{~14,8f ~}~%" e)))
+
+  (cl-online-gnuplot::gnuplot-send
+   (format nil "~{~a~%~}
+ set grid;
+ unset key;
+ plot ~{~a ~}~%"
+	   (list (if xrange
+		     (format nil "set xrange [~a:~a];" (first xrange) (second xrange))
+		     (format nil "set xrange [*:*];"))
+		 (if yrange
+		     (format nil "set yrange [~a:~a];" (first yrange) (second yrange))
+		     (format nil "set yrange [*:*];"))
+		 (if logy
+		     (format nil "set logscale y;")
+		     (format nil "unset logscale y;")))
+	   (let ((n (length (elt a 0))))
+	     (loop for i from 1 below n collect
+		  (if (= i (- n 1))
+		      (format nil "'/dev/shm/o.dat' u 1:~a w lp" (1+ i))
+		      (format nil "'/dev/shm/o.dat' u 1:~a w lp," (1+ i))))))))
+
 #+nil
 (ql:quickload :quickproject)
 #+nil

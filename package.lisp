@@ -3,5 +3,5 @@
 (defpackage #:cl-online-gnuplot
   (:use #:cl)
   (:export
-   #:plot))
-
+   #:plot
+   #:multi-plot))
