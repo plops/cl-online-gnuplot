@@ -78,6 +78,32 @@
 		      (format nil "'/dev/shm/o.dat' u 1:~a w lp" (1+ i))
 		      (format nil "'/dev/shm/o.dat' u 1:~a w lp," (1+ i))))))))
 
+(defun multi-x-plot (a &key (xrange nil) (yrange nil) (logy nil))
+  "plot multiple lines from a list of (((ax0 ay0) (ax1 ay1) .. ) ((bx0 by0) (bx1 by1) .. ))"
+  (loop for i below (length a) do
+       (with-open-file (s (format nil "/dev/shm/o~a.dat" i) :direction :output :if-exists :supersede
+			  :if-does-not-exist :create)
+	 (loop for (x y) in (elt a i) do
+	      (format s "~{~14,8f ~}~%" (list x y)))))
+
+  (cl-online-gnuplot::gnuplot-send
+   (format nil "~{~a~%~}
+ set grid;
+ unset key;
+ plot ~{~a ~}~%"
+	   (list (if xrange
+		     (format nil "set xrange [~a:~a];" (first xrange) (second xrange))
+		     (format nil "set xrange [*:*];"))
+		 (if yrange
+		     (format nil "set yrange [~a:~a];" (first yrange) (second yrange))
+		     (format nil "set yrange [*:*];"))
+		 (if logy
+		     (format nil "set logscale y;")
+		     (format nil "unset logscale y;")))
+	   (loop for i below (length a) collect
+		(format nil "'/dev/shm/o~d.dat' u 1:2 w lp~c" i (if (= i (1- (length a))) #\Space #\, ))
+		    ))))
+
 #+nil
 (ql:quickload :quickproject)
 #+nil

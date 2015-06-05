@@ -4,4 +4,5 @@
   (:use #:cl)
   (:export
    #:plot
-   #:multi-plot))
+   #:multi-plot
+   #:multi-x-plot))
