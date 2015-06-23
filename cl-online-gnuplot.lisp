@@ -3,9 +3,10 @@
 (in-package #:cl-online-gnuplot)
 (defparameter *current-gnuplot-process* nil)
 (defun open-gnuplot-stream (&key (gnuplot-binary
-				  (pathname "/usr/bin/gnuplot")))
+				  (pathname "/usr/bin/gnuplot"))
+				 (display ":0"))
   (setf *current-gnuplot-process* (sb-ext:run-program
-				   gnuplot-binary nil :input :stream :wait nil :output t))
+				   gnuplot-binary nil :environment '((format nil "DISPLAY=~a" display)) :input :stream :wait nil :output t))
   *current-gnuplot-process*)
 
 #+nil
