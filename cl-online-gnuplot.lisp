@@ -6,7 +6,7 @@
 				  (pathname "/usr/bin/gnuplot"))
 				 (display ":0"))
   (setf *current-gnuplot-process* (sb-ext:run-program
-				   gnuplot-binary nil :environment '((format nil "DISPLAY=~a" display)) :input :stream :wait nil :output t))
+				   gnuplot-binary nil :environment `(,(format nil "DISPLAY=~a" display)) :input :stream :wait nil :output t))
   *current-gnuplot-process*)
 
 #+nil
@@ -76,8 +76,8 @@
 	   (let ((n (length (elt a 0))))
 	     (loop for i from 1 below n collect
 		  (if (= i (- n 1))
-		      (format nil "'/dev/shm/o.dat' u 1:~a w lp" (1+ i))
-		      (format nil "'/dev/shm/o.dat' u 1:~a w lp," (1+ i))))))))
+		      (format nil "'/dev/shm/o.dat' u 1:~a w l" (1+ i))
+		      (format nil "'/dev/shm/o.dat' u 1:~a w l," (1+ i))))))))
 
 (defun multi-x-plot (a &key (xrange nil) (yrange nil) (logy nil))
   "plot multiple lines from a list of (((ax0 ay0) (ax1 ay1) .. ) ((bx0 by0) (bx1 by1) .. ))"
