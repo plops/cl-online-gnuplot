@@ -52,7 +52,7 @@
 				    (format nil "set logscale y;")
 				    (format nil "unset logscale y;"))))))
 
-(defun multi-plot (a &key (xrange nil) (yrange nil) (logy nil))
+(defun multi-plot (a &key (xrange nil) (yrange nil) (xlabel "") (ylabel "") (y2label "")  (logy nil) (title "") (label '()) (style '()) (extra '()))
     "plot multiple lines from a list of (x y0 y1 y2 y3 .. ) positions ((1 32.3 12.3 3.2) (2 93.3 12.4 3.2) .. )"
   (with-open-file (s "/dev/shm/o.dat" :direction :output :if-exists :supersede
 		     :if-does-not-exist :create)
@@ -62,7 +62,12 @@
   (cl-online-gnuplot::gnuplot-send
    (format nil "~{~a~%~}
  set grid;
- unset key;
+ set key top left;
+ set title \"~a\";
+ set xlabel \"~a\";
+ set ylabel \"~a\";
+ set y2label \"~a\";
+ set y2tics;
  plot ~{~a ~}~%"
 	   (list (if xrange
 		     (format nil "set xrange [~a:~a];" (first xrange) (second xrange))
@@ -73,11 +78,19 @@
 		 (if logy
 		     (format nil "set logscale y;")
 		     (format nil "unset logscale y;")))
+	   title
+	   xlabel
+	   ylabel
+	   y2label
 	   (let ((n (length (elt a 0))))
-	     (loop for i from 1 below n collect
+	     (loop for i from 1 below n
+		and lab in label
+	        and sty in style
+		and ext in extra
+		collect
 		  (if (= i (- n 1))
-		      (format nil "'/dev/shm/o.dat' u 1:~a w l" (1+ i))
-		      (format nil "'/dev/shm/o.dat' u 1:~a w l," (1+ i))))))))
+		      (format nil "'/dev/shm/o.dat' u 1:~a w ~a lw 3 title \"~a\" ~a" (1+ i) sty lab ext)
+		      (format nil "'/dev/shm/o.dat' u 1:~a w ~a lw 3 title \"~a\" ~a," (1+ i) sty lab ext)))))))
 
 (defun multi-x-plot (a &key (xrange nil) (yrange nil) (logy nil))
   "plot multiple lines from a list of (((ax0 ay0) (ax1 ay1) .. ) ((bx0 by0) (bx1 by1) .. ))"
